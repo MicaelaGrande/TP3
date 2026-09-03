@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot name="camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Enlace base / soporte -->
+  <link name="camera_mount_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_mount.stl"/>
+      </geometry>
+      <material name="gris">
+        <color rgba="0.3 0.3 0.3 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_mount.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Cuerpo de la cámara -->
+  <link name="camera_body_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_body.stl"/>
+      </geometry>
+      <material name="negro">
+        <color rgba="0.05 0.05 0.05 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_body.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="mount_to_body" type="fixed">
+    <parent link="camera_mount_link"/>
+    <child link="camera_body_link"/>
+    <origin xyz="0 0 0.02" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Lente -->
+  <link name="camera_lens_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_lens.stl"/>
+      </geometry>
+      <material name="vidrio">
+        <color rgba="0.1 0.1 0.15 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://tu_paquete/meshes/camera_lens.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="body_to_lens" type="fixed">
+    <parent link="camera_body_link"/>
+    <child link="camera_lens_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Frame óptico, útil para publicar sensor_msgs/Image o CameraInfo -->
+  <link name="camera_optical_frame"/>
+  <joint name="lens_to_optical" type="fixed">
+    <parent link="camera_lens_link"/>
+    <!-- Rotación estándar REP-103: Z hacia adelante, X derecha, Y abajo -->
+    <origin xyz="0.02 0 0" rpy="-1.5708 0 -1.5708"/>
+    <child link="camera_optical_frame"/>
+  </joint>
+
+</robot>
